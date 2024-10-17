@@ -1,2 +1,1 @@
-ProjetoPedidoVenda
 Projeto Pedido Venda
