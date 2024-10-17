@@ -108,28 +108,3 @@ INSERT INTO produtos (descricao, preco_venda) VALUES
 CREATE INDEX idx_codigo_cliente ON pedidos(codigo_cliente);
 CREATE INDEX idx_numero_pedido_produtos ON pedido_produtos(numero_pedido);
 CREATE INDEX idx_codigo_produto ON pedido_produtos(codigo_produto);
-
--- Inserir registros fictícios nas tabelas de pedidos e pedido_produtos
-INSERT INTO pedidos (data_emissao, codigo_cliente, valor_total) VALUES 
-('2024-10-01', 1, 4800.00),
-('2024-10-02', 2, 1200.00);
-
-INSERT INTO pedido_produtos (numero_pedido, codigo_produto, quantidade, valor_unitario, valor_total) VALUES 
-(1, 1, 1, 3500.00, 3500.00),  -- Notebook
-(1, 2, 2, 1200.00, 2400.00),  -- Smartphone
-(2, 1, 1, 1200.00, 1200.00);  -- Smartphone
-
--- Iniciar transação
-START TRANSACTION;
-
--- Fazer alterações em um pedido e seus produtos (exemplo de transação)
--- Suponha que o pedido 1 tenha o produto 2 atualizado
-UPDATE pedido_produtos 
-SET quantidade = 1, valor_total = 1200.00 
-WHERE numero_pedido = 1 AND codigo_produto = 2;
-
--- Confirmar transação
-COMMIT;
-
--- Rollback em caso de erro
-ROLLBACK;
