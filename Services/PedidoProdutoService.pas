@@ -13,6 +13,7 @@ type
     function EditarPedidoProduto(PedidoProdutoModel: TPedidoProdutoModel): Boolean;
     function ExcluirPedidoProduto(IdPedidoProduto: Integer): Boolean;
     function ObterPedidoProdutosPorPedido(NumeroPedido: Integer): TList<TPedidoProdutoModel>;
+    function ExcluirProdutosPorNumeroPedido(NumeroPedido: Integer): Boolean;
   end;
 
 implementation
@@ -31,7 +32,8 @@ begin
       DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
-      Query.SQL.Text := 'INSERT INTO pedido_produtos (numero_pedido, codigo_produto, quantidade, valor_unitario, valor_total) VALUES (:numero_pedido, :codigo_produto, :quantidade, :valor_unitario, :valor_total)';
+      Query.SQL.Text := 'INSERT INTO pedido_produtos (numero_pedido, codigo_produto, quantidade, valor_unitario, valor_total) '+
+                        ' VALUES (:numero_pedido, :codigo_produto, :quantidade, :valor_unitario, :valor_total)';
       Query.ParamByName('numero_pedido').AsInteger := PedidoProdutoModel.PedidoModel.NumeroPedido;
       Query.ParamByName('codigo_produto').AsInteger := PedidoProdutoModel.ProdutoModel.Codigo;
       Query.ParamByName('quantidade').AsInteger := PedidoProdutoModel.Quantidade;
@@ -63,7 +65,8 @@ begin
       DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
-      Query.SQL.Text := 'UPDATE pedido_produtos SET quantidade = :quantidade, valor_unitario = :valor_unitario, valor_total = :valor_total WHERE id_pedido_produto = :id_pedido_produto';
+      Query.SQL.Text := 'UPDATE pedido_produtos SET quantidade = :quantidade, valor_unitario = :valor_unitario, valor_total = :valor_total '+
+                        ' WHERE id_pedido_produto = :id_pedido_produto';
       Query.ParamByName('quantidade').AsInteger := PedidoProdutoModel.Quantidade;
       Query.ParamByName('valor_unitario').AsCurrency := PedidoProdutoModel.ValorUnitario;
       Query.ParamByName('valor_total').AsCurrency := PedidoProdutoModel.ValorTotal;
@@ -114,6 +117,7 @@ var
   PedidoProdutoModel: TPedidoProdutoModel;
 begin
   Result := TList<TPedidoProdutoModel>.Create;
+
   Query := TFDQuery.Create(nil);
 
   try
@@ -121,7 +125,11 @@ begin
       DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
-      Query.SQL.Text := 'SELECT id_pedido_produto, numero_pedido, codigo_produto, quantidade, valor_unitario, valor_total FROM pedido_produtos WHERE numero_pedido = :numero_pedido';
+      Query.SQL.Text := 'SELECT pp.id_pedido_produto, pp.numero_pedido, pp.codigo_produto, pp.quantidade, ' +
+                        'pp.valor_unitario, pp.valor_total, p.descricao ' +
+                        'FROM pedido_produtos pp ' +
+                        'INNER JOIN produtos p ON pp.codigo_produto = p.codigo ' +
+                        'WHERE pp.numero_pedido = :numero_pedido';
       Query.ParamByName('numero_pedido').AsInteger := NumeroPedido;
       Query.Open;
 
@@ -132,6 +140,7 @@ begin
           PedidoProdutoModel.IdPedidoProduto := Query.FieldByName('id_pedido_produto').AsInteger;
           PedidoProdutoModel.PedidoModel.NumeroPedido := Query.FieldByName('numero_pedido').AsInteger;
           PedidoProdutoModel.ProdutoModel.Codigo := Query.FieldByName('codigo_produto').AsInteger;
+          PedidoProdutoModel.ProdutoModel.Descricao := Query.FieldByName('descricao').AsString;
           PedidoProdutoModel.Quantidade := Query.FieldByName('quantidade').AsInteger;
           PedidoProdutoModel.ValorUnitario := Query.FieldByName('valor_unitario').AsCurrency;
           PedidoProdutoModel.ValorTotal := Query.FieldByName('valor_total').AsCurrency;
@@ -150,6 +159,33 @@ begin
       begin
         Result.Free;
         raise Exception.CreateFmt('Erro ao obter produtos do pedido: %s', [E.Message]);
+      end;
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+function TPedidoProdutoService.ExcluirProdutosPorNumeroPedido(NumeroPedido: Integer): Boolean;
+var
+  Query: TFDQuery;
+begin
+  Result := False;
+  Query := TFDQuery.Create(nil);
+
+  try
+    try
+      DmConexao.VerificarConexao;
+
+      Query.Connection := DmConexao.FDConexao;
+      Query.SQL.Text := 'DELETE FROM pedido_produto WHERE numero_pedido = :numero_pedido';
+      Query.ParamByName('numero_pedido').AsInteger := NumeroPedido;
+      Query.ExecSQL;
+      Result := True;
+    except
+      on E: Exception do
+      begin
+        raise Exception.CreateFmt('Erro ao excluir produtos do pedido: %s', [E.Message]);
       end;
     end;
   finally

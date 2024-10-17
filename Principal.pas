@@ -10,7 +10,7 @@ uses
   FireDAC.Comp.DataSet, Vcl.ExtCtrls, System.Generics.Collections,
   ClienteModel, ClienteController, PedidoModel, PedidoController, PedidoService,
   ProdutoModel, ProdutoController, PedidoProdutoModel, PedidoProdutoService,
-  Vcl.DBCtrls;
+  Vcl.DBCtrls, Vcl.ComCtrls, Vcl.ToolWin;
 
 type
   TfrmPrincipal = class(TForm)
@@ -22,17 +22,15 @@ type
     LblCodigoProduto: TLabel;
     LblQuantidade: TLabel;
     LblValorUnitario: TLabel;
-    FDMTPedido: TFDMemTable;
-    FDMTPedidocodigo_produto: TIntegerField;
-    FDMTPedidoquantidade: TIntegerField;
-    FDMTPedidovalor_unitario: TCurrencyField;
-    FDMTPedidovalor_total: TCurrencyField;
+    FDMTItensPedido: TFDMemTable;
+    FDMTItensPedidocodigo_produto: TIntegerField;
+    FDMTItensPedidoquantidade: TIntegerField;
+    FDMTItensPedidovalor_unitario: TCurrencyField;
+    FDMTItensPedidovalor_total: TCurrencyField;
     DsPedido: TDataSource;
-    FDMTPedidodescricao: TStringField;
-    PnlPedido: TPanel;
+    FDMTItensPedidodescricao: TStringField;
     BtnFechar: TButton;
     LblDescricaoProduto: TLabel;
-    Panel1: TPanel;
     LblCodigoClienteP: TLabel;
     LblNomeCliente: TLabel;
     EdtCodigoCliente: TEdit;
@@ -42,6 +40,15 @@ type
     GrbItensVenda: TGroupBox;
     LblTotal: TLabel;
     DBGrdItensVenda: TDBGrid;
+    LblCodigoPedido: TLabel;
+    EdtNumeroPedido: TEdit;
+    BtnCarregarPedido: TButton;
+    BtnCancelarPedido: TButton;
+    StatusBar1: TStatusBar;
+    GrbBusca: TGroupBox;
+    GrbBuscaCliente: TGroupBox;
+    GrbItens: TGroupBox;
+    PnlBotoes: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure BtnInserirItemClick(Sender: TObject);
     procedure BtnGravarPedidoClick(Sender: TObject);
@@ -51,6 +58,10 @@ type
     procedure EdtCodigoProdutoExit(Sender: TObject);
     procedure EdtCodigoClienteExit(Sender: TObject);
     procedure BtnFecharClick(Sender: TObject);
+    procedure BtnCarregarPedidoClick(Sender: TObject);
+    procedure BtnCancelarPedidoClick(Sender: TObject);
+    procedure EdtNumeroPedidoChange(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     FClienteController: TClienteController;
     FProdutoController: TProdutoController;
@@ -79,6 +90,9 @@ type
     function PreencherPedidoModel: TPedidoModel;
     function PreencherListaProdutos: TList<TPedidoProdutoModel>;
     function ValidarDadosPedido(PedidoModel: TPedidoModel; ListaProdutos: TList<TPedidoProdutoModel>): Boolean;
+    procedure CarregarPedido;
+    procedure CarregarProdutosPedido(ListaProdutos: TList<TPedidoProdutoModel>);
+    procedure CancelarPedido;
   end;
 
 var
@@ -120,7 +134,7 @@ begin
 
     FTotalPedido := 0;
 
-    FDMTPedido.Active := True;
+    FDMTItensPedido.Active := True;
     FDMTCliente.Active := True;
 
     AtualizarTotalPedido;
@@ -132,7 +146,7 @@ begin
   except
     on E: Exception do
     begin
-      raise Exception.Create('Erro ao inicializar o formulário: ' + E.Message);
+      ShowMessage('Erro ao inicializar os componentes: ' + E.Message);
     end;
   end;
 end;
@@ -145,6 +159,12 @@ begin
   FreeAndNil(FPedidoService);
   FreeAndNil(FPedidoProdutoService);
   inherited;
+end;
+
+procedure TfrmPrincipal.FormShow(Sender: TObject);
+begin
+  if EdtCodigoCliente.CanFocus then
+    EdtCodigoCliente.SetFocus;
 end;
 
 procedure TfrmPrincipal.BtnInserirItemClick(Sender: TObject);
@@ -186,12 +206,12 @@ begin
     Result.ClienteModel.Codigo := FDMTCliente.FieldByName('codigo').AsInteger;
     Result.DataEmissao := Now;
 
-    FDMTPedido.First;
+    FDMTItensPedido.First;
 
-    while not FDMTPedido.Eof do
+    while not FDMTItensPedido.Eof do
     begin
-      TotalValor := TotalValor + FDMTPedido.FieldByName('valor_total').AsCurrency;
-      FDMTPedido.Next;
+      TotalValor := TotalValor + FDMTItensPedido.FieldByName('valor_total').AsCurrency;
+      FDMTItensPedido.Next;
     end;
 
     Result.ValorTotal := TotalValor;
@@ -214,19 +234,19 @@ begin
   Result := TList<TPedidoProdutoModel>.Create;
 
   try
-    FDMTPedido.First;
+    FDMTItensPedido.First;
 
-    while not FDMTPedido.Eof do
+    while not FDMTItensPedido.Eof do
     begin
       PedidoProduto := TPedidoProdutoModel.Create;
-      PedidoProduto.ProdutoModel.Codigo := FDMTPedido.FieldByName('codigo_produto').AsInteger;
-      PedidoProduto.Quantidade := FDMTPedido.FieldByName('quantidade').AsInteger;
-      PedidoProduto.ProdutoModel.Descricao := FDMTPedido.FieldByName('descricao').AsString;
-      PedidoProduto.ValorUnitario := FDMTPedido.FieldByName('valor_unitario').AsCurrency;
-      PedidoProduto.ValorTotal := FDMTPedido.FieldByName('valor_total').AsCurrency;
+      PedidoProduto.ProdutoModel.Codigo := FDMTItensPedido.FieldByName('codigo_produto').AsInteger;
+      PedidoProduto.Quantidade := FDMTItensPedido.FieldByName('quantidade').AsInteger;
+      PedidoProduto.ProdutoModel.Descricao := FDMTItensPedido.FieldByName('descricao').AsString;
+      PedidoProduto.ValorUnitario := FDMTItensPedido.FieldByName('valor_unitario').AsCurrency;
+      PedidoProduto.ValorTotal := FDMTItensPedido.FieldByName('valor_total').AsCurrency;
 
       Result.Add(PedidoProduto);
-      FDMTPedido.Next;
+      FDMTItensPedido.Next;
     end;
   except
     on E: Exception do
@@ -244,23 +264,23 @@ begin
   try
     ValorTotal := Quantidade * ValorUnitario;
 
-    if FDMTPedido.State in [dsEdit] then
+    if FDMTItensPedido.State in [dsEdit] then
     begin
-      FDMTPedido.Edit;
-      FDMTPedido.FieldByName('quantidade').AsInteger := Quantidade;
-      FDMTPedido.FieldByName('valor_unitario').AsCurrency := ValorUnitario;
-      FDMTPedido.FieldByName('valor_total').AsCurrency := ValorTotal;
-      FDMTPedido.Post;
+      FDMTItensPedido.Edit;
+      FDMTItensPedido.FieldByName('quantidade').AsInteger := Quantidade;
+      FDMTItensPedido.FieldByName('valor_unitario').AsCurrency := ValorUnitario;
+      FDMTItensPedido.FieldByName('valor_total').AsCurrency := ValorTotal;
+      FDMTItensPedido.Post;
     end
     else
     begin
-      FDMTPedido.Append;
-      FDMTPedido.FieldByName('codigo_produto').AsInteger := CodigoProduto;
-      FDMTPedido.FieldByName('descricao').AsString := Descricao;
-      FDMTPedido.FieldByName('quantidade').AsInteger := Quantidade;
-      FDMTPedido.FieldByName('valor_unitario').AsCurrency := ValorUnitario;
-      FDMTPedido.FieldByName('valor_total').AsCurrency := ValorTotal;
-      FDMTPedido.Post;
+      FDMTItensPedido.Append;
+      FDMTItensPedido.FieldByName('codigo_produto').AsInteger := CodigoProduto;
+      FDMTItensPedido.FieldByName('descricao').AsString := Descricao;
+      FDMTItensPedido.FieldByName('quantidade').AsInteger := Quantidade;
+      FDMTItensPedido.FieldByName('valor_unitario').AsCurrency := ValorUnitario;
+      FDMTItensPedido.FieldByName('valor_total').AsCurrency := ValorTotal;
+      FDMTItensPedido.Post;
     end;
 
     AtualizarTotalPedido;
@@ -282,12 +302,12 @@ end;
 procedure TfrmPrincipal.AtualizarTotalPedido;
 begin
   FTotalPedido := 0;
-  FDMTPedido.First;
+  FDMTItensPedido.First;
 
-  while not FDMTPedido.Eof do
+  while not FDMTItensPedido.Eof do
   begin
-    FTotalPedido := FTotalPedido + FDMTPedido.FieldByName('valor_total').AsCurrency;
-    FDMTPedido.Next;
+    FTotalPedido := FTotalPedido + FDMTItensPedido.FieldByName('valor_total').AsCurrency;
+    FDMTItensPedido.Next;
   end;
 
   LblTotal.Caption := 'Total do Pedido: R$ ' + FormatCurr('#,##0.00', FTotalPedido);
@@ -302,9 +322,9 @@ begin
       RemoverProdutoSelecionado;
     VK_ESCAPE:
     begin
-      if FDMTPedido.State in [dsEdit, dsInsert] then
+      if FDMTItensPedido.State in [dsEdit, dsInsert] then
       begin
-        FDMTPedido.Cancel;
+        FDMTItensPedido.Cancel;
         EdtCodigoProduto.Text := '';
         EdtQuantidade.Text := '';
         EdtValorUnitario.Text := FormatCurr('#,##0.00', StrToCurrDef(EdtValorUnitario.Text, 0));
@@ -320,14 +340,14 @@ var
   ValorUnitario: Currency;
 begin
   try
-    if FDMTPedido.IsEmpty or (FDMTPedido.RecNo = 0) then
+    if FDMTItensPedido.IsEmpty or (FDMTItensPedido.RecNo = 0) then
       Exit;
 
-    FDMTPedido.Edit;
+    FDMTItensPedido.Edit;
 
-    CodigoProduto := FDMTPedido.FieldByName('codigo_produto').AsInteger;
-    Quantidade := FDMTPedido.FieldByName('quantidade').AsInteger;
-    ValorUnitario := FDMTPedido.FieldByName('valor_unitario').AsCurrency;
+    CodigoProduto := FDMTItensPedido.FieldByName('codigo_produto').AsInteger;
+    Quantidade := FDMTItensPedido.FieldByName('quantidade').AsInteger;
+    ValorUnitario := FDMTItensPedido.FieldByName('valor_unitario').AsCurrency;
 
     EdtCodigoProduto.Text := IntToStr(CodigoProduto);
     EdtQuantidade.Text := IntToStr(Quantidade);
@@ -338,8 +358,8 @@ begin
     on E: Exception do
     begin
       ShowMessage('Erro ao editar produto: ' + E.Message);
-      if FDMTPedido.State in [dsEdit, dsInsert] then
-        FDMTPedido.Cancel;
+      if FDMTItensPedido.State in [dsEdit, dsInsert] then
+        FDMTItensPedido.Cancel;
     end;
   end;
 end;
@@ -356,6 +376,12 @@ begin
     AtualizarDescricaoProduto(StrToInt(EdtCodigoProduto.Text));
 end;
 
+procedure TfrmPrincipal.EdtNumeroPedidoChange(Sender: TObject);
+begin
+  BtnCarregarPedido.Enabled := EdtNumeroPedido.Text <> '';
+  BtnCancelarPedido.Enabled := EdtNumeroPedido.Text <> '';
+end;
+
 procedure TfrmPrincipal.EdtValorUnitarioExit(Sender: TObject);
 begin
   EdtValorUnitario.Text := FormatCurr('#,##0.00', StrToCurrDef(EdtValorUnitario.Text, 0));
@@ -365,18 +391,18 @@ procedure TfrmPrincipal.RemoverProdutoSelecionado;
 var
   NomeProduto: string;
 begin
-  if DBGrdItensVenda.DataSource.DataSet.IsEmpty or (FDMTPedido.RecNo = 0) then
+  if DBGrdItensVenda.DataSource.DataSet.IsEmpty or (FDMTItensPedido.RecNo = 0) then
   begin
     ShowMessage('Nenhum produto selecionado para remoção.');
     Exit;
   end;
 
-  NomeProduto := FDMTPedido.FieldByName('descricao').AsString;
+  NomeProduto := FDMTItensPedido.FieldByName('descricao').AsString;
 
   try
     if MessageDlg('Deseja realmente remover o produto ' + sLineBreak + '"' + NomeProduto + '"?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
-      FDMTPedido.Delete;
+      FDMTItensPedido.Delete;
       AtualizarTotalPedido;
     end;
   except
@@ -387,9 +413,58 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.BtnFecharClick(Sender: TObject);
+procedure TfrmPrincipal.BtnCancelarPedidoClick(Sender: TObject);
 begin
-  Close;
+   CancelarPedido;
+end;
+
+procedure TfrmPrincipal.BtnCarregarPedidoClick(Sender: TObject);
+var
+  NumeroPedido: Integer;
+  PedidoModel: TPedidoModel;
+  ListaProdutos: TList<TPedidoProdutoModel>;
+begin
+  ListaProdutos := TList<TPedidoProdutoModel>.Create;
+
+  try
+    if not TryStrToInt(EdtNumeroPedido.Text, NumeroPedido) then
+    begin
+      ShowMessage('Por favor, insira um número de pedido válido.');
+      Exit;
+    end;
+
+    try
+
+      PedidoModel := FPedidoController.LocalizarPedido(NumeroPedido);
+
+      if Assigned(PedidoModel) then
+      begin
+        ListaProdutos := FPedidoProdutoService.ObterPedidoProdutosPorPedido(NumeroPedido);
+
+        CarregarProdutosPedido(ListaProdutos);
+
+        ShowMessage('Pedido carregado com sucesso!');
+      end
+      else
+        ShowMessage('Pedido não encontrado.');
+
+    except
+      on E: Exception do
+        ShowMessage('Erro ao carregar o pedido: ' + E.Message);
+    end;
+
+  finally
+    ListaProdutos.Free;
+  end;
+end;
+
+procedure TfrmPrincipal.BtnFecharClick(Sender: TObject);
+var
+  Result: Integer;
+begin
+  Result := MessageDlg('Você realmente deseja sair do sistema?', mtConfirmation, [mbYes, mbNo], 0);
+  if Result = mrYes then
+    Close;
 end;
 
 procedure TfrmPrincipal.BtnGravarPedidoClick(Sender: TObject);
@@ -451,6 +526,8 @@ function TfrmPrincipal.ObterDadosCliente(CodigoCliente: Integer): string;
 var
   Cliente: TClienteModel;
 begin
+  Result := '';
+
   try
     Cliente := FClienteController.BuscarClientePorCodigo(CodigoCliente);
 
@@ -541,6 +618,7 @@ var
   Cliente: TClienteModel;
 begin
   Cliente := TClienteModel.Create;
+
   try
     Cliente.Codigo := StrToInt(EdtCodigoCliente.Text);
     Cliente.Nome := FClienteNome;
@@ -558,6 +636,8 @@ begin
         FDMTCliente.Cancel;
     end;
   end;
+
+  Cliente.Free;
 end;
 
 procedure TfrmPrincipal.AtualizarClienteNoBanco(Codigo: Integer; Nome: string);
@@ -588,26 +668,108 @@ end;
 function TfrmPrincipal.ValidarDadosPedido(PedidoModel: TPedidoModel; ListaProdutos: TList<TPedidoProdutoModel>): Boolean;
 begin
   Result := True;
-
   if PedidoModel.ClienteModel.Codigo = 0 then
   begin
     ShowMessage('Selecione um cliente válido.');
     Result := False;
     Exit;
   end;
-
   if ListaProdutos.Count = 0 then
   begin
     ShowMessage('Adicione pelo menos um produto ao pedido.');
     Result := False;
     Exit;
   end;
-
   if PedidoModel.ValorTotal <= 0 then
   begin
     ShowMessage('O valor total do pedido deve ser maior que zero.');
     Result := False;
     Exit;
+  end;
+end;
+
+procedure TfrmPrincipal.CarregarPedido;
+var
+  NumeroPedido: Integer;
+  PedidoModel: TPedidoModel;
+  ListaProdutos: TList<TPedidoProdutoModel>;
+begin
+  if not TryStrToInt(EdtNumeroPedido.Text, NumeroPedido) then
+  begin
+    ShowMessage('Por favor, insira um número de pedido válido.');
+    Exit;
+  end;
+
+  try
+    PedidoModel := FPedidoController.LocalizarPedido(NumeroPedido);
+
+    if Assigned(PedidoModel) then
+    begin
+      AtualizarCliente(PedidoModel.ClienteModel.Codigo);
+
+      ObterDadosCliente(PedidoModel.ClienteModel.Codigo);
+
+      if ClienteNome <> MSG_CLIENTE_NAO_ENCONTRADO then
+      begin
+        LblNomeCliente.Caption := ClienteNome;
+        Utils.AtualizarCorLabel(LblNomeCliente, ClienteNome);
+      end
+      else
+      begin
+        LblNomeCliente.Caption := MSG_CLIENTE_NAO_ENCONTRADO;
+        Utils.AtualizarCorLabel(LblNomeCliente, '');
+      end;
+
+      CarregarProdutosPedido(ListaProdutos);
+
+      ShowMessage('Pedido carregado com sucesso!');
+    end
+    else
+      ShowMessage('Pedido não encontrado.');
+
+  except
+    on E: Exception do
+      ShowMessage('Erro ao carregar o pedido: ' + E.Message);
+  end;
+end;
+
+procedure TfrmPrincipal.CarregarProdutosPedido(ListaProdutos: TList<TPedidoProdutoModel>);
+var
+  i: Integer;
+begin
+  FDMTItensPedido.EmptyDataSet;
+
+  for i := 0 to ListaProdutos.Count - 1 do
+  begin
+    FDMTItensPedido.Append;
+    FDMTItensPedido.FieldByName('codigo_produto').AsInteger := ListaProdutos[i].ProdutoModel.Codigo;
+    FDMTItensPedido.FieldByName('descricao').AsString := ListaProdutos[i].ProdutoModel.Descricao;
+    FDMTItensPedido.FieldByName('quantidade').AsInteger := ListaProdutos[i].Quantidade;
+    FDMTItensPedido.FieldByName('valor_unitario').AsCurrency := ListaProdutos[i].ValorUnitario;
+    FDMTItensPedido.FieldByName('valor_total').AsFloat := ListaProdutos[i].ValorTotal;
+    FDMTItensPedido.Post;
+  end;
+end;
+
+procedure TfrmPrincipal.CancelarPedido;
+var
+  NumeroPedido: Integer;
+begin
+  if not TryStrToInt(EdtNumeroPedido.Text, NumeroPedido) then
+  begin
+    ShowMessage('Por favor, insira um número de pedido válido.');
+    Exit;
+  end;
+
+  if MessageDlg('Tem certeza que deseja cancelar o pedido ' + IntToStr(NumeroPedido) + '?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    try
+      FPedidoController.CancelarPedido(NumeroPedido);
+      ShowMessage('Pedido cancelado com sucesso!');
+    except
+      on E: Exception do
+        ShowMessage('Erro ao cancelar o pedido: ' + E.Message);
+    end;
   end;
 end;
 

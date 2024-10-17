@@ -22,6 +22,7 @@ type
     function RemoverPedido(NumeroPedido: Integer): Boolean;
     function ListarPedidos: TList<TPedidoModel>;
     function LocalizarPedido(NumeroPedido: Integer): TPedidoModel;
+    function CancelarPedido(NumeroPedido: Integer): Boolean;
   end;
 
 implementation
@@ -143,6 +144,32 @@ end;
 function TPedidoController.LocalizarPedido(NumeroPedido: Integer): TPedidoModel;
 begin
   Result := FPedidoService.BuscarPedidoPorNumero(NumeroPedido);
+end;
+
+function TPedidoController.CancelarPedido(NumeroPedido: Integer): Boolean;
+begin
+  Result := False;
+
+  if not DmConexao.FDConexao.InTransaction then
+    DmConexao.FDConexao.StartTransaction;
+
+  try
+    if FPedidoProdutoService.ExcluirProdutosPorNumeroPedido(NumeroPedido) then
+    begin
+      if FPedidoService.ExcluirPedido(NumeroPedido) then
+      begin
+        DmConexao.FDConexao.Commit;
+        Result := True;
+      end;
+    end;
+
+  except
+    on E: Exception do
+    begin
+      DmConexao.FDConexao.Rollback;
+      raise Exception.CreateFmt('Erro ao cancelar pedido: %s', [E.Message]);
+    end;
+  end;
 end;
 
 end.

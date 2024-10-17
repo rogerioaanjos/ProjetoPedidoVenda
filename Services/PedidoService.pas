@@ -64,7 +64,7 @@ begin
 
   try
     try
-      DmConexao.VerificarConexao; // Verifica a conexão antes da operação
+      DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
       Query.SQL.Text := 'UPDATE pedidos SET data_emissao = :data_emissao, codigo_cliente = :codigo_cliente, valor_total = :valor_total WHERE numero_pedido = :numero_pedido';
@@ -95,7 +95,7 @@ begin
 
   try
     try
-      DmConexao.VerificarConexao; // Verifica a conexão antes da operação
+      DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
       Query.SQL.Text := 'DELETE FROM pedidos WHERE numero_pedido = :numero_pedido';
@@ -123,7 +123,7 @@ begin
 
   try
     try
-      DmConexao.VerificarConexao; // Verifica a conexão antes da operação
+      DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
       Query.SQL.Text := 'SELECT numero_pedido, data_emissao, codigo_cliente, valor_total FROM pedidos';
@@ -167,7 +167,7 @@ begin
 
   try
     try
-      DmConexao.VerificarConexao; // Verifica a conexão antes da operação
+      DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
       Query.SQL.Text := 'SELECT numero_pedido, data_emissao, codigo_cliente, valor_total FROM pedidos WHERE numero_pedido = :numero_pedido';
