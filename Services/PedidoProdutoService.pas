@@ -178,7 +178,7 @@ begin
       DmConexao.VerificarConexao;
 
       Query.Connection := DmConexao.FDConexao;
-      Query.SQL.Text := 'DELETE FROM pedido_produto WHERE numero_pedido = :numero_pedido';
+      Query.SQL.Text := 'DELETE FROM pedido_produtos WHERE numero_pedido = :numero_pedido';
       Query.ParamByName('numero_pedido').AsInteger := NumeroPedido;
       Query.ExecSQL;
       Result := True;

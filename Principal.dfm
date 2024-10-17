@@ -87,9 +87,6 @@ object frmPrincipal: TfrmPrincipal
     Width = 622
     Height = 19
     Panels = <>
-    ExplicitLeft = 184
-    ExplicitTop = 632
-    ExplicitWidth = 0
   end
   object GrbBusca: TGroupBox
     Left = 8

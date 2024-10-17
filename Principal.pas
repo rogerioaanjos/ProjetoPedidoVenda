@@ -434,7 +434,6 @@ begin
     end;
 
     try
-
       PedidoModel := FPedidoController.LocalizarPedido(NumeroPedido);
 
       if Assigned(PedidoModel) then
