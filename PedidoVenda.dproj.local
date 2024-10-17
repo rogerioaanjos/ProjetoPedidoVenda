@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2024/10/14 19:05:14.000.749,=D:\02 - Projetos DEV\Delphi\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 19:06:53.000.877,D:\02 - Projetos DEV\Delphi\Unit1.dfm=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Principal.dfm</Transaction>
+    <Transaction>2024/10/14 19:06:53.000.877,D:\02 - Projetos DEV\Delphi\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Principal.pas</Transaction>
+    <Transaction>2024/10/14 19:08:59.000.971,D:\02 - Projetos DEV\Delphi\Project1.dproj=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\PedidoVenda.dproj</Transaction>
+    <Transaction>2024/10/14 19:27:01.000.908,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 19:27:12.000.970,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.dfm=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\DataModule\Conexao.dfm</Transaction>
+    <Transaction>2024/10/14 19:27:12.000.970,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\DataModule\Conexao.pas</Transaction>
+    <Transaction>2024/10/14 19:43:59.000.355,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 19:44:01.000.477,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas</Transaction>
+    <Transaction>2024/10/14 19:44:05.000.286,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit3.pas</Transaction>
+    <Transaction>2024/10/14 21:06:15.000.624,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\model\ClienteModel.pas</Transaction>
+    <Transaction>2024/10/14 21:08:56.000.919,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Services\ClienteService.pas</Transaction>
+    <Transaction>2024/10/14 21:09:09.000.576,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit3.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Controller\ClienteController.pas</Transaction>
+    <Transaction>2024/10/14 21:49:12.000.313,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 21:49:53.000.258,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Model\ProdutoModel.pas</Transaction>
+    <Transaction>2024/10/14 21:50:24.000.950,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 21:51:15.000.511,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Services\ProdutoService.pas</Transaction>
+    <Transaction>2024/10/14 21:52:09.000.588,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 21:52:26.000.106,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Controller\ProdutoController.pas</Transaction>
+    <Transaction>2024/10/14 21:57:42.000.694,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 21:57:45.000.016,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas</Transaction>
+    <Transaction>2024/10/14 22:03:58.000.440,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Model\PedidoModel.pas</Transaction>
+    <Transaction>2024/10/14 22:04:35.000.837,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Model\PedidoProdutoModel.pas</Transaction>
+    <Transaction>2024/10/14 22:27:39.000.966,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 22:27:42.000.538,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas</Transaction>
+    <Transaction>2024/10/14 22:31:01.000.832,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Services\PedidoService.pas</Transaction>
+    <Transaction>2024/10/14 22:31:46.000.623,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit2.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Services\PedidoProdutoService.pas</Transaction>
+    <Transaction>2024/10/14 22:50:00.000.278,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 22:51:43.000.983,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Controller\PedidoController.pas</Transaction>
+    <Transaction>2024/10/14 22:53:02.000.097,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/14 22:53:30.000.617,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Controller\PedidoProdutoController.pas</Transaction>
+    <Transaction>2024/10/15 09:30:30.000.512,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/15 09:37:04.000.612,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\DataModule\ConexaoDB.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/15 22:39:20.000.417,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\DataModule\ConexaoDB.pas=</Transaction>
+    <Transaction>2024/10/15 23:21:00.000.389,=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas</Transaction>
+    <Transaction>2024/10/15 23:22:22.000.236,D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Unit1.pas=D:\02 - Projetos DEV\Delphi\Projeto WkTechnology\Utils\Utils.pas</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="Controller"/>
+    <File Path="Controller\ClienteController.pas"/>
+    <File Path="Controller\PedidoController.pas"/>
+    <File Path="Controller\ProdutoController.pas"/>
+    <File Path="Controller\PedidoProdutoController.pas"/>
+    <File Path="DataModule"/>
+    <File Path="DataModule\Conexao.pas"/>
+    <File Path="DataModule\Conexao.dfm"/>
+    <File Path="Model"/>
+    <File Path="Model\PedidoModel.pas"/>
+    <File Path="Model\PedidoProdutoModel.pas"/>
+    <File Path="Model\ProdutoModel.pas"/>
+    <File Path="Model\ClienteModel.pas"/>
+    <File Path="Services"/>
+    <File Path="Services\ClienteService.pas"/>
+    <File Path="Services\PedidoProdutoService.pas"/>
+    <File Path="Services\PedidoService.pas"/>
+    <File Path="Services\ProdutoService.pas"/>
+    <File Path="Utils"/>
+    <File Path="Utils\Utils.pas"/>
+    <File Path="Principal.pas"/>
+    <File Path="Principal.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>
