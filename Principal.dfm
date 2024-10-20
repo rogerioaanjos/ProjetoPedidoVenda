@@ -87,6 +87,8 @@ object frmPrincipal: TfrmPrincipal
     Width = 622
     Height = 19
     Panels = <>
+    ExplicitTop = 649
+    ExplicitWidth = 618
   end
   object GrbBusca: TGroupBox
     Left = 8
@@ -133,7 +135,7 @@ object frmPrincipal: TfrmPrincipal
       Left = 151
       Top = 26
       Width = 121
-      Height = 25
+      Height = 21
       NumbersOnly = True
       TabOrder = 2
       OnChange = EdtNumeroPedidoChange
@@ -163,7 +165,7 @@ object frmPrincipal: TfrmPrincipal
     object LblNomeCliente: TLabel
       Left = 280
       Top = 30
-      Width = 158
+      Width = 73
       Height = 14
       Caption = 'Nome Cliente'
       Font.Charset = DEFAULT_CHARSET
@@ -177,7 +179,7 @@ object frmPrincipal: TfrmPrincipal
       Left = 151
       Top = 27
       Width = 121
-      Height = 25
+      Height = 21
       NumbersOnly = True
       TabOrder = 0
       OnExit = EdtCodigoClienteExit
@@ -249,7 +251,7 @@ object frmPrincipal: TfrmPrincipal
       Left = 151
       Top = 20
       Width = 121
-      Height = 25
+      Height = 21
       NumbersOnly = True
       TabOrder = 0
       OnExit = EdtCodigoProdutoExit
@@ -258,7 +260,7 @@ object frmPrincipal: TfrmPrincipal
       Left = 151
       Top = 47
       Width = 121
-      Height = 25
+      Height = 21
       NumbersOnly = True
       TabOrder = 1
     end
@@ -266,8 +268,9 @@ object frmPrincipal: TfrmPrincipal
       Left = 151
       Top = 74
       Width = 121
-      Height = 25
+      Height = 21
       NumbersOnly = True
+      ReadOnly = True
       TabOrder = 2
       OnExit = EdtValorUnitarioExit
     end

@@ -70,20 +70,20 @@ type
     FPedidoService: TPedidoService;
     FPedidoProdutoService: TPedidoProdutoService;
     FTotalPedido: Currency;
-    FDescricaoProduto: string;
+    //FDescricaoProduto: string;
     FClienteNome: string;
     procedure AtualizarTotalPedido;
     procedure InserirOuAtualizarProdutoGrid(CodigoProduto: Integer; Descricao: string; Quantidade: Integer; ValorUnitario: Currency);
     procedure EditarProdutoSelecionado;
     procedure RemoverProdutoSelecionado;
-    function ObterDescricaoProduto(CodigoProduto: Integer): string;
+    function ObterDadosProduto(CodigoProduto: Integer): TProdutoModel;
     function ObterDadosCliente(CodigoCliente: Integer): string;
-    procedure AtualizarDescricaoProduto(CodigoProduto: Integer);
+    procedure AtualizarDadosProduto(CodigoProduto: Integer);
     procedure AtualizarCliente(CodigoCliente: Integer);
     procedure InserirCliente;
     procedure AtualizarClienteNoBanco(Codigo: Integer; Nome: string);
   public
-    property DescricaoProduto: string read FDescricaoProduto write FDescricaoProduto;
+    //property DescricaoProduto: string read FDescricaoProduto write FDescricaoProduto;
     property ClienteNome: string read FClienteNome write FClienteNome;
     function ValidarCampos: Boolean;
     procedure Inicializar;
@@ -172,6 +172,7 @@ var
   CodigoProduto, Quantidade: Integer;
   ValorUnitario: Currency;
   DescricaoProduto: string;
+  Produto: TProdutoModel;
 begin
   try
     if not ValidarCampos then
@@ -180,13 +181,23 @@ begin
     CodigoProduto := StrToInt(EdtCodigoProduto.Text);
     Quantidade := StrToInt(EdtQuantidade.Text);
 
-    if not Utils.ValidarValorUnitario(EdtValorUnitario, 'Valor Unitário', ValorUnitario) then
-      Exit;
+    Produto := ObterDadosProduto(CodigoProduto);
 
-    DescricaoProduto := ObterDescricaoProduto(CodigoProduto);
+    if Assigned(Produto) then
+    begin
+      if not Utils.ValidarValorUnitario(EdtValorUnitario, 'Valor Unitário', ValorUnitario) then
+        Exit;
 
-    InserirOuAtualizarProdutoGrid(CodigoProduto, DescricaoProduto, Quantidade, ValorUnitario);
-    BtnInserirItem.Caption := 'Inserir Produto';
+      InserirOuAtualizarProdutoGrid(CodigoProduto, Produto.Descricao, Quantidade, Produto.PrecoVenda);
+      BtnInserirItem.Caption := 'Inserir Produto';
+    end
+    else
+    begin
+      ShowMessage('Não é possível inserir o ítem, produto não encontrado.');
+
+      if EdtCodigoProduto.CanFocus then
+        EdtCodigoProduto.SetFocus;
+    end;
   except
     on E: Exception do
     begin
@@ -373,7 +384,7 @@ end;
 procedure TfrmPrincipal.EdtCodigoProdutoExit(Sender: TObject);
 begin
   if Length(EdtCodigoProduto.Text) > 0 then
-    AtualizarDescricaoProduto(StrToInt(EdtCodigoProduto.Text));
+    AtualizarDadosProduto(StrToInt(EdtCodigoProduto.Text));
 end;
 
 procedure TfrmPrincipal.EdtNumeroPedidoChange(Sender: TObject);
@@ -425,33 +436,26 @@ var
   ListaProdutos: TList<TPedidoProdutoModel>;
 begin
   ListaProdutos := TList<TPedidoProdutoModel>.Create;
-
   try
     if not TryStrToInt(EdtNumeroPedido.Text, NumeroPedido) then
     begin
       ShowMessage('Por favor, insira um número de pedido válido.');
       Exit;
     end;
-
     try
       PedidoModel := FPedidoController.LocalizarPedido(NumeroPedido);
-
       if Assigned(PedidoModel) then
       begin
         ListaProdutos := FPedidoProdutoService.ObterPedidoProdutosPorPedido(NumeroPedido);
-
         CarregarProdutosPedido(ListaProdutos);
-
         ShowMessage('Pedido carregado com sucesso!');
       end
       else
         ShowMessage('Pedido não encontrado.');
-
     except
       on E: Exception do
         ShowMessage('Erro ao carregar o pedido: ' + E.Message);
     end;
-
   finally
     ListaProdutos.Free;
   end;
@@ -494,29 +498,27 @@ begin
   end;
 end;
 
-function TfrmPrincipal.ObterDescricaoProduto(CodigoProduto: Integer): string;
+function TfrmPrincipal.ObterDadosProduto(CodigoProduto: Integer): TProdutoModel;
 var
   Produto: TProdutoModel;
 begin
   try
     Produto := FProdutoController.BuscarProdutoPorCodigo(CodigoProduto);
 
-    if Assigned(Produto) then
+    if not Assigned(Produto) then
     begin
-      FDescricaoProduto := Produto.Descricao;
-      Result := FDescricaoProduto;
+      //ShowMessage('Produto não encontrado.');
+      Result := nil;
     end
     else
     begin
-      FDescricaoProduto := MSG_PRODUTO_NAO_ENCONTRADO;
-      Result := FDescricaoProduto;
+      Result := Produto;
     end;
   except
     on E: Exception do
     begin
-      ShowMessage('Erro ao buscar a descrição do produto: ' + E.Message);
-      FDescricaoProduto := '';
-      Result := '';
+      ShowMessage('Erro ao buscar os dados do produto ' + E.Message);
+      Result := nil;
     end;
   end;
 end;
@@ -550,27 +552,33 @@ begin
   end;
 end;
 
-procedure TfrmPrincipal.AtualizarDescricaoProduto(CodigoProduto: Integer);
+procedure TfrmPrincipal.AtualizarDadosProduto(CodigoProduto: Integer);
 var
   Produto: TProdutoModel;
 begin
   try
-    ObterDescricaoProduto(CodigoProduto);
+    Produto := ObterDadosProduto(CodigoProduto);
 
-    if DescricaoProduto <> MSG_PRODUTO_NAO_ENCONTRADO then
+    if Assigned(Produto) then
     begin
-      LblDescricaoProduto.Caption := DescricaoProduto;
-      Utils.AtualizarCorLabel(LblDescricaoProduto, DescricaoProduto);
+      LblDescricaoProduto.Caption := Produto.Descricao;
+      EdtValorUnitario.Text := FormatCurr('#,##0.00', Produto.PrecoVenda);
+
+      Utils.AtualizarCorLabel(LblDescricaoProduto, Produto.Descricao);
     end
     else
     begin
       LblDescricaoProduto.Caption := MSG_PRODUTO_NAO_ENCONTRADO;
+      EdtValorUnitario.Text := '0,00';
+
       Utils.AtualizarCorLabel(LblDescricaoProduto, '');
     end;
   except
     on E: Exception do
     begin
-      ShowMessage('Erro ao buscar a descrição do produto: ' + E.Message);
+      ShowMessage('Erro ao buscar os dados do produto: ' + E.Message);
+
+      EdtValorUnitario.Text := '0,00';
       LblDescricaoProduto.Caption := '';
       LblDescricaoProduto.Font.Color := clWindowText;
     end;
@@ -670,6 +678,9 @@ begin
   if PedidoModel.ClienteModel.Codigo = 0 then
   begin
     ShowMessage('Selecione um cliente válido.');
+    if EdtCodigoCliente.CanFocus then
+      EdtCodigoCliente.SetFocus;
+
     Result := False;
     Exit;
   end;
