@@ -70,7 +70,6 @@ type
     FPedidoService: TPedidoService;
     FPedidoProdutoService: TPedidoProdutoService;
     FTotalPedido: Currency;
-    //FDescricaoProduto: string;
     FClienteNome: string;
     procedure AtualizarTotalPedido;
     procedure InserirOuAtualizarProdutoGrid(CodigoProduto: Integer; Descricao: string; Quantidade: Integer; ValorUnitario: Currency);
@@ -83,7 +82,6 @@ type
     procedure InserirCliente;
     procedure AtualizarClienteNoBanco(Codigo: Integer; Nome: string);
   public
-    //property DescricaoProduto: string read FDescricaoProduto write FDescricaoProduto;
     property ClienteNome: string read FClienteNome write FClienteNome;
     function ValidarCampos: Boolean;
     procedure Inicializar;
