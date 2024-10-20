@@ -507,7 +507,6 @@ begin
 
     if not Assigned(Produto) then
     begin
-      //ShowMessage('Produto não encontrado.');
       Result := nil;
     end
     else
