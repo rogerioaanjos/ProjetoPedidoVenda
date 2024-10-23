@@ -54,7 +54,6 @@ type
     procedure BtnGravarPedidoClick(Sender: TObject);
     procedure DBGrdItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    procedure EdtValorUnitarioExit(Sender: TObject);
     procedure EdtCodigoProdutoExit(Sender: TObject);
     procedure EdtCodigoClienteExit(Sender: TObject);
     procedure BtnFecharClick(Sender: TObject);
@@ -185,14 +184,12 @@ begin
     begin
       if not Utils.ValidarValorUnitario(EdtValorUnitario, 'Valor Unitário', ValorUnitario) then
         Exit;
-
       InserirOuAtualizarProdutoGrid(CodigoProduto, Produto.Descricao, Quantidade, Produto.PrecoVenda);
       BtnInserirItem.Caption := 'Inserir Produto';
     end
     else
     begin
       ShowMessage('Não é possível inserir o ítem, produto não encontrado.');
-
       if EdtCodigoProduto.CanFocus then
         EdtCodigoProduto.SetFocus;
     end;
@@ -389,11 +386,6 @@ procedure TfrmPrincipal.EdtNumeroPedidoChange(Sender: TObject);
 begin
   BtnCarregarPedido.Enabled := EdtNumeroPedido.Text <> '';
   BtnCancelarPedido.Enabled := EdtNumeroPedido.Text <> '';
-end;
-
-procedure TfrmPrincipal.EdtValorUnitarioExit(Sender: TObject);
-begin
-  EdtValorUnitario.Text := FormatCurr('#,##0.00', StrToCurrDef(EdtValorUnitario.Text, 0));
 end;
 
 procedure TfrmPrincipal.RemoverProdutoSelecionado;

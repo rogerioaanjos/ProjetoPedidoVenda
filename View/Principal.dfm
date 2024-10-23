@@ -2,8 +2,8 @@ object frmPrincipal: TfrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Pedido de Venda'
-  ClientHeight = 669
-  ClientWidth = 622
+  ClientHeight = 668
+  ClientWidth = 618
   Color = clMenuBar
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -83,12 +83,10 @@ object frmPrincipal: TfrmPrincipal
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 650
-    Width = 622
+    Top = 649
+    Width = 618
     Height = 19
     Panels = <>
-    ExplicitTop = 649
-    ExplicitWidth = 618
   end
   object GrbBusca: TGroupBox
     Left = 8
@@ -113,7 +111,7 @@ object frmPrincipal: TfrmPrincipal
     end
     object BtnCancelarPedido: TButton
       Left = 386
-      Top = 26
+      Top = 24
       Width = 97
       Height = 25
       Caption = 'Cancelar Pedido'
@@ -123,7 +121,7 @@ object frmPrincipal: TfrmPrincipal
     end
     object BtnCarregarPedido: TButton
       Left = 283
-      Top = 26
+      Top = 24
       Width = 97
       Height = 25
       Caption = 'Carregar Pedido'
@@ -272,7 +270,6 @@ object frmPrincipal: TfrmPrincipal
       NumbersOnly = True
       ReadOnly = True
       TabOrder = 2
-      OnExit = EdtValorUnitarioExit
     end
     object BtnInserirItem: TButton
       Left = 472
