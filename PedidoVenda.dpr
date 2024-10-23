@@ -2,7 +2,6 @@ program PedidoVenda;
 
 uses
   Vcl.Forms,
-  Principal in 'Principal.pas' {frmPrincipal},
   Conexao in 'DataModule\Conexao.pas' {DmConexao: TDataModule},
   ClienteModel in 'Model\ClienteModel.pas',
   ClienteService in 'Services\ClienteService.pas',
@@ -16,14 +15,15 @@ uses
   PedidoProdutoService in 'Services\PedidoProdutoService.pas',
   PedidoController in 'Controller\PedidoController.pas',
   PedidoProdutoController in 'Controller\PedidoProdutoController.pas',
-  Utils in 'Utils\Utils.pas';
+  Utils in 'Utils\Utils.pas',
+  Principal in 'View\Principal.pas' {frmPrincipal};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.CreateForm(TDmConexao, DmConexao);
+  Application.CreateForm(TfrmPrincipal, frmPrincipal);
   Application.Run;
 end.

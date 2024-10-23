@@ -122,10 +122,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Principal.pas">
-            <Form>frmPrincipal</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="DataModule\Conexao.pas">
             <Form>DmConexao</Form>
             <FormType>dfm</FormType>
@@ -144,6 +140,10 @@
         <DCCReference Include="Controller\PedidoController.pas"/>
         <DCCReference Include="Controller\PedidoProdutoController.pas"/>
         <DCCReference Include="Utils\Utils.pas"/>
+        <DCCReference Include="View\Principal.pas">
+            <Form>frmPrincipal</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
